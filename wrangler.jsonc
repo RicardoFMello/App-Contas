@@ -1,0 +1,8 @@
+{
+  "name": "app-contas",
+  "compatibility_date": "2026-07-18",
+  "assets": {
+    "directory": "./financeiro-app",
+    "not_found_handling": "404-page"
+  }
+}
