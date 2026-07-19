@@ -4,8 +4,8 @@
 // ============================================================
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
-const SUPABASE_URL = 'COLOQUE_AQUI_SUA_SUPABASE_URL';
-const SUPABASE_ANON_KEY = 'COLOQUE_AQUI_SUA_ANON_KEY';
+const SUPABASE_URL = 'https://hnvupzrbszhsoncyzdzv.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_f8DyXvbhuYn3VLd0Xe9AvA_6SmtGt6Q';
 
 if (SUPABASE_URL.startsWith('COLOQUE_AQUI')) {
   console.warn(
