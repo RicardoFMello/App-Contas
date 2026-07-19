@@ -14,6 +14,8 @@
   <link rel="stylesheet" href="css/dashboard.css" />
   <link rel="stylesheet" href="css/app-shell.css" />
   <link rel="stylesheet" href="css/contas.css" />
+  <link rel="stylesheet" href="css/receitas.css" />
+  <link rel="stylesheet" href="css/investimentos.css" />
 </head>
 <body>
 
@@ -89,6 +91,8 @@
       <nav class="app-nav" aria-label="Navegação principal">
         <button class="nav-btn" data-nav="dashboard" type="button">Dashboard</button>
         <button class="nav-btn" data-nav="contas" type="button">Contas</button>
+        <button class="nav-btn" data-nav="receitas" type="button">Receitas</button>
+        <button class="nav-btn" data-nav="investimentos" type="button">Investimentos</button>
       </nav>
 
       <div class="app-topbar-acoes">
@@ -162,11 +166,130 @@
       </div>
     </section>
 
+    <!-- ============================================================
+         VISTA: Receitas
+         ============================================================ -->
+    <section id="vista-receitas" class="app-vista oculto">
+      <div class="contas-header">
+        <h1 class="dash-titulo">Receitas</h1>
+
+        <div class="contas-header-acoes">
+          <div class="seletor-mes">
+            <button id="receitas-mes-anterior" class="btn-icone" type="button" aria-label="Mês anterior">‹</button>
+            <span id="receitas-mes-referencia" class="num">—</span>
+            <button id="receitas-mes-seguinte" class="btn-icone" type="button" aria-label="Próximo mês">›</button>
+          </div>
+          <button id="botao-nova-receita" class="btn btn-primario btn-nova-conta" type="button">+ Nova receita</button>
+        </div>
+      </div>
+
+      <div class="card receitas-total-card">
+        <span class="indicador-label">Total do mês</span>
+        <span class="num receitas-total-valor" id="receitas-total-mes">R$ 0,00</span>
+      </div>
+
+      <div id="receitas-lista" class="contas-lista">
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         VISTA: Investimentos
+         ============================================================ -->
+    <section id="vista-investimentos" class="app-vista oculto">
+      <div class="contas-header">
+        <h1 class="dash-titulo">Investimentos</h1>
+        <button id="botao-novo-investimento" class="btn btn-primario btn-nova-conta" type="button">+ Novo investimento</button>
+      </div>
+
+      <div class="dash-grid-indicadores investimentos-resumo" id="investimentos-resumo">
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+      </div>
+
+      <div id="investimentos-lista" class="contas-lista">
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+      </div>
+    </section>
+
   </main>
 
   <!-- ============================================================
-       MODAL: Nova conta / editar conta
+       MODAL: Novo investimento / editar / atualizar valor
        ============================================================ -->
+  <dialog id="modal-investimento" class="modal">
+    <form id="form-investimento" method="dialog" class="modal-conteudo">
+      <h2 class="modal-titulo" id="modal-investimento-titulo">Novo investimento</h2>
+
+      <div class="campo">
+        <label for="investimento-tipo">Tipo</label>
+        <select id="investimento-tipo">
+          <option value="renda_fixa">Renda fixa</option>
+          <option value="acoes">Ações</option>
+          <option value="fundos">Fundos</option>
+          <option value="cripto">Criptomoedas</option>
+        </select>
+      </div>
+
+      <div class="campo">
+        <label for="investimento-nome">Nome</label>
+        <input id="investimento-nome" required placeholder="Ex: Tesouro Selic, PETR4" />
+      </div>
+
+      <div class="modal-grid-2">
+        <div class="campo">
+          <label for="investimento-aportado">Valor aportado</label>
+          <input id="investimento-aportado" type="number" step="0.01" min="0" required />
+        </div>
+        <div class="campo">
+          <label for="investimento-atual">Valor atual</label>
+          <input id="investimento-atual" type="number" step="0.01" min="0" required />
+        </div>
+      </div>
+
+      <div id="modal-investimento-erro" class="alerta alerta-erro oculto" role="alert"></div>
+
+      <div class="modal-acoes">
+        <button type="button" class="btn btn-texto" data-fechar-modal>Cancelar</button>
+        <button type="submit" class="btn btn-primario" id="botao-salvar-investimento">Salvar</button>
+      </div>
+    </form>
+  </dialog>
+  <dialog id="modal-receita" class="modal">
+    <form id="form-receita" method="dialog" class="modal-conteudo">
+      <h2 class="modal-titulo" id="modal-receita-titulo">Nova receita</h2>
+
+      <div class="campo">
+        <label for="receita-tipo">Tipo</label>
+        <select id="receita-tipo">
+          <option value="salario">Salário</option>
+          <option value="hora_extra">Hora extra</option>
+          <option value="renda_extra">Renda extra</option>
+          <option value="outra">Outra</option>
+        </select>
+      </div>
+
+      <div class="campo">
+        <label for="receita-descricao">Descrição (opcional)</label>
+        <input id="receita-descricao" placeholder="Ex: freela de fim de semana" />
+      </div>
+
+      <div class="campo">
+        <label for="receita-valor">Valor</label>
+        <input id="receita-valor" type="number" step="0.01" min="0" required />
+      </div>
+
+      <div id="modal-receita-erro" class="alerta alerta-erro oculto" role="alert"></div>
+
+      <div class="modal-acoes">
+        <button type="button" class="btn btn-texto" data-fechar-modal>Cancelar</button>
+        <button type="submit" class="btn btn-primario" id="botao-salvar-receita">Salvar</button>
+      </div>
+    </form>
+  </dialog>
   <dialog id="modal-conta" class="modal">
     <form id="form-conta" method="dialog" class="modal-conteudo">
       <h2 class="modal-titulo" id="modal-conta-titulo">Nova conta</h2>

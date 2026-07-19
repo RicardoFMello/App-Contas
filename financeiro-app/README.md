@@ -44,8 +44,8 @@ financeiro-app/
 - [x] Fase 3 — Camada de dados (CRUD)
 - [x] Fase 4 — Dashboard
 - [x] Fase 5 — Módulo Contas
-- [ ] Fase 6 — Módulo Receitas
-- [ ] Fase 7 — Módulo Investimentos
+- [x] Fase 6 — Módulo Receitas
+- [x] Fase 7 — Módulo Investimentos
 - [ ] Fase 8 — Módulo Metas
 - [ ] Fase 9 — Tema e Configurações
 - [ ] Fase 10 — PWA
@@ -119,3 +119,22 @@ Arquivos: `js/ui/contas.js`, `js/ui/router.js`, `css/contas.css`, `css/app-shell
 - Parcelas: número da parcela sugerido automaticamente (histórico + 1) ao lançar uma conta parcelada.
 - "Arquivar" faz soft delete (pede confirmação) — preserva o histórico.
 - Chamado `js/data/categorias.js` (Fase 3) para popular o seletor — ainda não existe uma tela dedicada para criar categorias; por enquanto elas ficam "Sem categoria" até você decidir se quer esse módulo (posso incluir como extra numa fase futura).
+
+## Fase 6 — Módulo Receitas
+
+Arquivos: `js/ui/receitas.js`, `css/receitas.css`, vista e modal em `index.html`.
+
+- Nova aba "Receitas" na navegação, com o mesmo padrão de seletor de mês da vista Contas.
+- Cadastro rápido: tipo (salário/hora extra/renda extra/outra), descrição opcional, valor.
+- Card de total do mês sempre em destaque no topo.
+- Editar e remover diretamente na lista.
+- O indicador "Receitas do mês" do Dashboard já usa esses dados automaticamente — nada a ligar manualmente.
+
+## Fase 7 — Módulo Investimentos
+
+Arquivos: `js/ui/investimentos.js`, `css/investimentos.css`, vista e modal em `index.html`.
+
+- Cadastro por tipo (renda fixa, ações, fundos, cripto), valor aportado e valor atual.
+- Resumo no topo: patrimônio investido, total aportado, rendimento (R$ e %) — usa `resumoPatrimonio()` da Fase 3, mesma fórmula do card do Dashboard.
+- "Atualizar" reabre o modal para você lançar o valor atual mais recente (evolução patrimonial manual — sem integração automática de cotação, conforme escopo original).
+- O card "Patrimônio investido" do Dashboard já reflete esses dados automaticamente.

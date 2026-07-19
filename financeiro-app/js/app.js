@@ -5,6 +5,8 @@ import { login, logout, aoMudarSessao } from './auth/auth.js';
 import { inicializarTema } from './ui/theme.js';
 import { inicializarDashboard } from './ui/dashboard.js';
 import { inicializarContas } from './ui/contas.js';
+import { inicializarReceitas } from './ui/receitas.js';
+import { inicializarInvestimentos } from './ui/investimentos.js';
 import { registrarVista, inicializarNavegacao } from './ui/router.js';
 
 const telaLogin = document.getElementById('tela-login');
@@ -21,6 +23,8 @@ let appJaInicializado = false;
 
 registrarVista('dashboard', document.getElementById('vista-dashboard'), () => inicializarDashboard());
 registrarVista('contas', document.getElementById('vista-contas'), () => inicializarContas());
+registrarVista('receitas', document.getElementById('vista-receitas'), () => inicializarReceitas());
+registrarVista('investimentos', document.getElementById('vista-investimentos'), () => inicializarInvestimentos());
 
 // Alterna a tela visível conforme o estado de autenticação.
 aoMudarSessao((sessao) => {
