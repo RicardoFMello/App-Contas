@@ -47,7 +47,7 @@ financeiro-app/
 - [x] Fase 6 — Módulo Receitas
 - [x] Fase 7 — Módulo Investimentos
 - [x] Fase 8 — Módulo Metas
-- [ ] Fase 9 — Tema e Configurações
+- [x] Fase 9 — Tema e Configurações
 - [ ] Fase 10 — PWA
 - [ ] Fase 11 — QA
 - [ ] Fase 12 — Importação da planilha
@@ -147,3 +147,11 @@ Arquivos: `js/ui/metas.js`, `css/metas.css`, vistas e modais em `index.html`.
 - Cada card mostra barra de progresso, % concluído e dias restantes até o prazo.
 - Botão "Aportar" soma um valor ao progresso sem precisar editar a meta inteira.
 - **Importante:** crie uma meta chamada "Reserva de emergência" (ou qualquer nome contendo "reserva") — é assim que o card do Dashboard identifica automaticamente qual meta é a reserva. Você mencionou que ela cobre 6 meses de despesas: calcule esse valor (6x sua despesa mensal média) e use como "Valor da meta".
+
+## Fase 9 — Tema e Configurações
+
+Arquivos: `js/ui/configuracoes.js`, `js/data/configuracoes.js`, `css/configuracoes.css`, vista em `index.html`. `js/ui/theme.js` reescrito.
+
+- Nova aba "Config" com seletor visual de tema (claro/escuro) e e-mail da conta logada.
+- **Tema agora é salvo na nuvem** (tabela `configuracoes`, criada automaticamente por usuário na Fase 1) além do `localStorage`. Fluxo: abre o app → aplica o tema salvo localmente (instantâneo, sem flash) → busca o tema da nuvem em paralelo e ajusta se for diferente (ex: você mudou o tema em outro aparelho). Isso já deixa a arquitetura pronta para quando sua esposa/mãe/irmão tiverem contas próprias, cada um com o tema salvo separadamente.
+- Alternar o tema em qualquer lugar do app (topbar ou tela de Configurações) atualiza os dois lugares ao mesmo tempo.

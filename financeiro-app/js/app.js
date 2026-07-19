@@ -2,12 +2,13 @@
 // APP: ponto de entrada
 // ============================================================
 import { login, logout, aoMudarSessao } from './auth/auth.js';
-import { inicializarTema } from './ui/theme.js';
+import { inicializarTema, ativarSincronizacaoDeTema } from './ui/theme.js';
 import { inicializarDashboard } from './ui/dashboard.js';
 import { inicializarContas } from './ui/contas.js';
 import { inicializarReceitas } from './ui/receitas.js';
 import { inicializarInvestimentos } from './ui/investimentos.js';
 import { inicializarMetas } from './ui/metas.js';
+import { inicializarConfiguracoes } from './ui/configuracoes.js';
 import { registrarVista, inicializarNavegacao } from './ui/router.js';
 
 const telaLogin = document.getElementById('tela-login');
@@ -27,6 +28,7 @@ registrarVista('contas', document.getElementById('vista-contas'), () => iniciali
 registrarVista('receitas', document.getElementById('vista-receitas'), () => inicializarReceitas());
 registrarVista('investimentos', document.getElementById('vista-investimentos'), () => inicializarInvestimentos());
 registrarVista('metas', document.getElementById('vista-metas'), () => inicializarMetas());
+registrarVista('configuracoes', document.getElementById('vista-configuracoes'), () => inicializarConfiguracoes());
 
 // Alterna a tela visível conforme o estado de autenticação.
 aoMudarSessao((sessao) => {
@@ -36,6 +38,7 @@ aoMudarSessao((sessao) => {
     if (!appJaInicializado) {
       appJaInicializado = true;
       inicializarNavegacao('dashboard');
+      ativarSincronizacaoDeTema();
     }
   } else {
     telaApp.classList.add('oculto');

@@ -17,6 +17,7 @@
   <link rel="stylesheet" href="css/receitas.css" />
   <link rel="stylesheet" href="css/investimentos.css" />
   <link rel="stylesheet" href="css/metas.css" />
+  <link rel="stylesheet" href="css/configuracoes.css" />
 </head>
 <body>
 
@@ -95,6 +96,7 @@
         <button class="nav-btn" data-nav="receitas" type="button">Receitas</button>
         <button class="nav-btn" data-nav="investimentos" type="button">Investimentos</button>
         <button class="nav-btn" data-nav="metas" type="button">Metas</button>
+        <button class="nav-btn" data-nav="configuracoes" type="button">Config</button>
       </nav>
 
       <div class="app-topbar-acoes">
@@ -229,6 +231,35 @@
       <div id="metas-lista" class="metas-grid">
         <div class="skeleton-card"></div>
         <div class="skeleton-card"></div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         VISTA: Configurações
+         ============================================================ -->
+    <section id="vista-configuracoes" class="app-vista oculto">
+      <h1 class="dash-titulo config-titulo">Configurações</h1>
+
+      <div class="card config-card">
+        <h2 class="config-secao-titulo">Aparência</h2>
+        <p class="config-secao-descricao">Escolha como o app aparece neste e nos seus outros dispositivos.</p>
+        <div class="config-tema-opcoes">
+          <button type="button" class="config-tema-botao" data-tema-opcao="claro">
+            <span class="config-tema-preview config-tema-preview-claro"></span>
+            Claro
+          </button>
+          <button type="button" class="config-tema-botao" data-tema-opcao="escuro">
+            <span class="config-tema-preview config-tema-preview-escuro"></span>
+            Escuro
+          </button>
+        </div>
+      </div>
+
+      <div class="card config-card">
+        <h2 class="config-secao-titulo">Conta</h2>
+        <p class="config-secao-descricao">Você está conectado como:</p>
+        <p class="config-email" id="config-email">—</p>
+        <button id="botao-sair-config" class="btn btn-texto config-botao-sair" type="button">Sair da conta</button>
       </div>
     </section>
 
