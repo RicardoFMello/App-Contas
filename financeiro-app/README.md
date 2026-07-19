@@ -48,7 +48,7 @@ financeiro-app/
 - [x] Fase 7 — Módulo Investimentos
 - [x] Fase 8 — Módulo Metas
 - [x] Fase 9 — Tema e Configurações
-- [ ] Fase 10 — PWA
+- [x] Fase 10 — PWA
 - [ ] Fase 11 — QA
 - [ ] Fase 12 — Importação da planilha
 - [ ] Fase 13 — Deploy (GitHub → Cloudflare Pages)
@@ -155,3 +155,17 @@ Arquivos: `js/ui/configuracoes.js`, `js/data/configuracoes.js`, `css/configuraco
 - Nova aba "Config" com seletor visual de tema (claro/escuro) e e-mail da conta logada.
 - **Tema agora é salvo na nuvem** (tabela `configuracoes`, criada automaticamente por usuário na Fase 1) além do `localStorage`. Fluxo: abre o app → aplica o tema salvo localmente (instantâneo, sem flash) → busca o tema da nuvem em paralelo e ajusta se for diferente (ex: você mudou o tema em outro aparelho). Isso já deixa a arquitetura pronta para quando sua esposa/mãe/irmão tiverem contas próprias, cada um com o tema salvo separadamente.
 - Alternar o tema em qualquer lugar do app (topbar ou tela de Configurações) atualiza os dois lugares ao mesmo tempo.
+
+## Fase 10 — PWA
+
+Arquivos: `manifest.json`, `service-worker.js`, `assets/icons/*.png`, metatags em `index.html`, registro em `js/app.js`.
+
+- Ícones gerados em 4 versões (192/512, normal/maskable) — cobre Android, iOS e Windows.
+- Service worker cacheia só os arquivos do próprio app (HTML/CSS/JS). **Nunca** intercepta chamadas ao Supabase — seus dados financeiros sempre vêm da rede, nunca de um cache desatualizado.
+- Estratégia "stale-while-revalidate": abre instantâneo (do cache) e atualiza sozinho em segundo plano quando há internet.
+- **Se você mudar algum arquivo CSS/JS no futuro e a mudança não aparecer no celular:** suba o número em `CACHE_NAME` no topo do `service-worker.js` (ex: `v1` → `v2`) — isso força todo mundo a buscar a versão nova.
+
+### Como instalar no celular
+
+- **Android (Chrome):** abra o app pela URL → menu (⋮) → "Adicionar à tela inicial" ou "Instalar app".
+- **iPhone (Safari):** abra o app → botão de compartilhar (□↑) → "Adicionar à Tela de Início". *(Só funciona no Safari, não no Chrome do iOS — limitação da Apple, não do app.)*

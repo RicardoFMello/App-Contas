@@ -11,6 +11,15 @@ import { inicializarMetas } from './ui/metas.js';
 import { inicializarConfiguracoes } from './ui/configuracoes.js';
 import { registrarVista, inicializarNavegacao } from './ui/router.js';
 
+// ---------------- PWA: registro do service worker ----------------
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./service-worker.js').catch((erro) => {
+      console.warn('Service worker não registrado:', erro);
+    });
+  });
+}
+
 const telaLogin = document.getElementById('tela-login');
 const telaApp = document.getElementById('tela-app');
 const formLogin = document.getElementById('form-login');
