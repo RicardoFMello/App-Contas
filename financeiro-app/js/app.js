@@ -7,6 +7,7 @@ import { inicializarDashboard } from './ui/dashboard.js';
 import { inicializarContas } from './ui/contas.js';
 import { inicializarReceitas } from './ui/receitas.js';
 import { inicializarInvestimentos } from './ui/investimentos.js';
+import { inicializarMetas } from './ui/metas.js';
 import { registrarVista, inicializarNavegacao } from './ui/router.js';
 
 const telaLogin = document.getElementById('tela-login');
@@ -25,6 +26,7 @@ registrarVista('dashboard', document.getElementById('vista-dashboard'), () => in
 registrarVista('contas', document.getElementById('vista-contas'), () => inicializarContas());
 registrarVista('receitas', document.getElementById('vista-receitas'), () => inicializarReceitas());
 registrarVista('investimentos', document.getElementById('vista-investimentos'), () => inicializarInvestimentos());
+registrarVista('metas', document.getElementById('vista-metas'), () => inicializarMetas());
 
 // Alterna a tela visível conforme o estado de autenticação.
 aoMudarSessao((sessao) => {

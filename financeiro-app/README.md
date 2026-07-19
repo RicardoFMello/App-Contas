@@ -46,7 +46,7 @@ financeiro-app/
 - [x] Fase 5 — Módulo Contas
 - [x] Fase 6 — Módulo Receitas
 - [x] Fase 7 — Módulo Investimentos
-- [ ] Fase 8 — Módulo Metas
+- [x] Fase 8 — Módulo Metas
 - [ ] Fase 9 — Tema e Configurações
 - [ ] Fase 10 — PWA
 - [ ] Fase 11 — QA
@@ -138,3 +138,12 @@ Arquivos: `js/ui/investimentos.js`, `css/investimentos.css`, vista e modal em `i
 - Resumo no topo: patrimônio investido, total aportado, rendimento (R$ e %) — usa `resumoPatrimonio()` da Fase 3, mesma fórmula do card do Dashboard.
 - "Atualizar" reabre o modal para você lançar o valor atual mais recente (evolução patrimonial manual — sem integração automática de cotação, conforme escopo original).
 - O card "Patrimônio investido" do Dashboard já reflete esses dados automaticamente.
+
+## Fase 8 — Módulo Metas
+
+Arquivos: `js/ui/metas.js`, `css/metas.css`, vistas e modais em `index.html`.
+
+- Cadastro: nome, valor da meta, valor já guardado, prazo opcional.
+- Cada card mostra barra de progresso, % concluído e dias restantes até o prazo.
+- Botão "Aportar" soma um valor ao progresso sem precisar editar a meta inteira.
+- **Importante:** crie uma meta chamada "Reserva de emergência" (ou qualquer nome contendo "reserva") — é assim que o card do Dashboard identifica automaticamente qual meta é a reserva. Você mencionou que ela cobre 6 meses de despesas: calcule esse valor (6x sua despesa mensal média) e use como "Valor da meta".

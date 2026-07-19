@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="css/contas.css" />
   <link rel="stylesheet" href="css/receitas.css" />
   <link rel="stylesheet" href="css/investimentos.css" />
+  <link rel="stylesheet" href="css/metas.css" />
 </head>
 <body>
 
@@ -93,6 +94,7 @@
         <button class="nav-btn" data-nav="contas" type="button">Contas</button>
         <button class="nav-btn" data-nav="receitas" type="button">Receitas</button>
         <button class="nav-btn" data-nav="investimentos" type="button">Investimentos</button>
+        <button class="nav-btn" data-nav="metas" type="button">Metas</button>
       </nav>
 
       <div class="app-topbar-acoes">
@@ -215,11 +217,80 @@
       </div>
     </section>
 
+    <!-- ============================================================
+         VISTA: Metas
+         ============================================================ -->
+    <section id="vista-metas" class="app-vista oculto">
+      <div class="contas-header">
+        <h1 class="dash-titulo">Metas</h1>
+        <button id="botao-nova-meta" class="btn btn-primario btn-nova-conta" type="button">+ Nova meta</button>
+      </div>
+
+      <div id="metas-lista" class="metas-grid">
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+      </div>
+    </section>
+
   </main>
 
   <!-- ============================================================
-       MODAL: Novo investimento / editar / atualizar valor
+       MODAL: Nova meta / editar meta
        ============================================================ -->
+  <dialog id="modal-meta" class="modal">
+    <form id="form-meta" method="dialog" class="modal-conteudo">
+      <h2 class="modal-titulo" id="modal-meta-titulo">Nova meta</h2>
+
+      <div class="campo">
+        <label for="meta-nome">Nome</label>
+        <input id="meta-nome" required placeholder="Ex: Reserva de emergência, Casa, Itália" />
+      </div>
+
+      <div class="modal-grid-2">
+        <div class="campo">
+          <label for="meta-valor-alvo">Valor da meta</label>
+          <input id="meta-valor-alvo" type="number" step="0.01" min="0.01" required />
+        </div>
+        <div class="campo">
+          <label for="meta-valor-atual">Valor já guardado</label>
+          <input id="meta-valor-atual" type="number" step="0.01" min="0" />
+        </div>
+      </div>
+
+      <div class="campo">
+        <label for="meta-prazo">Prazo (opcional)</label>
+        <input id="meta-prazo" type="date" />
+      </div>
+
+      <div id="modal-meta-erro" class="alerta alerta-erro oculto" role="alert"></div>
+
+      <div class="modal-acoes">
+        <button type="button" class="btn btn-texto" data-fechar-modal>Cancelar</button>
+        <button type="submit" class="btn btn-primario" id="botao-salvar-meta">Salvar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- ============================================================
+       MODAL: Aportar na meta
+       ============================================================ -->
+  <dialog id="modal-aporte" class="modal">
+    <form id="form-aporte" method="dialog" class="modal-conteudo">
+      <h2 class="modal-titulo" id="modal-aporte-titulo">Aportar na meta</h2>
+
+      <div class="campo">
+        <label for="aporte-valor">Valor do aporte</label>
+        <input id="aporte-valor" type="number" step="0.01" min="0.01" required autofocus />
+      </div>
+
+      <div id="modal-aporte-erro" class="alerta alerta-erro oculto" role="alert"></div>
+
+      <div class="modal-acoes">
+        <button type="button" class="btn btn-texto" data-fechar-modal>Cancelar</button>
+        <button type="submit" class="btn btn-primario" id="botao-salvar-aporte">Aportar</button>
+      </div>
+    </form>
+  </dialog>
   <dialog id="modal-investimento" class="modal">
     <form id="form-investimento" method="dialog" class="modal-conteudo">
       <h2 class="modal-titulo" id="modal-investimento-titulo">Novo investimento</h2>
