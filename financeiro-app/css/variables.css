@@ -1,0 +1,112 @@
+/* ============================================================
+   DESIGN TOKENS
+   Base: Apple HIG (clareza, profundidade sutil, tipografia do sistema)
+         + Microsoft Fluent (acrylic sutil, cantos arredondados, elevação)
+   ============================================================ */
+
+:root {
+  /* Tipografia — fonte do sistema (nativa em iOS/Android/Windows/macOS,
+     carregamento instantâneo, zero flash, alinhado ao HIG/Fluent) */
+  --font-display: -apple-system, "Segoe UI Variable", "Segoe UI", system-ui, sans-serif;
+  --font-body: -apple-system, "Segoe UI", system-ui, sans-serif;
+  --font-mono: "SF Mono", "Cascadia Code", ui-monospace, monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.375rem;
+  --text-2xl: 1.75rem;
+  --text-3xl: 2.25rem;
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* Espaçamento */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* Raio e elevação */
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+  --radius-full: 999px;
+
+  --shadow-sm: 0 1px 2px rgba(15, 18, 24, 0.06);
+  --shadow-md: 0 8px 24px rgba(15, 18, 24, 0.08);
+  --shadow-lg: 0 16px 40px rgba(15, 18, 24, 0.12);
+
+  --transition-fast: 140ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 220ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Semânticas fixas (não mudam com o tema) */
+  --success: #1F9254;
+  --success-bg: rgba(31, 146, 84, 0.12);
+  --danger: #D64545;
+  --danger-bg: rgba(214, 69, 69, 0.12);
+  --warning: #C98A1E;
+  --warning-bg: rgba(201, 138, 30, 0.12);
+}
+
+/* ---------------- TEMA CLARO ---------------- */
+:root,
+[data-theme="claro"] {
+  --bg: #F6F7FA;
+  --surface: #FFFFFF;
+  --surface-alt: #EEF1F5;
+  --surface-raised: #FFFFFF;
+  --border: #E3E6EC;
+  --border-strong: #D2D6DE;
+
+  --text-primary: #14171C;
+  --text-secondary: #5B6270;
+  --text-tertiary: #9099A8;
+
+  --accent: #2F6FED;
+  --accent-hover: #245ACB;
+  --accent-soft: rgba(47, 111, 237, 0.10);
+  --accent-contrast: #FFFFFF;
+
+  --glow-a: rgba(47, 111, 237, 0.18);
+  --glow-b: rgba(31, 146, 84, 0.12);
+}
+
+/* ---------------- TEMA ESCURO ---------------- */
+[data-theme="escuro"] {
+  --bg: #0B0D10;
+  --surface: #16181D;
+  --surface-alt: #1E2126;
+  --surface-raised: #1C1F25;
+  --border: #2A2E35;
+  --border-strong: #383D46;
+
+  --text-primary: #F2F3F5;
+  --text-secondary: #9AA1AC;
+  --text-tertiary: #6B7280;
+
+  --accent: #5B90FF;
+  --accent-hover: #7DA5FF;
+  --accent-soft: rgba(91, 144, 255, 0.16);
+  --accent-contrast: #0B0D10;
+
+  --glow-a: rgba(91, 144, 255, 0.20);
+  --glow-b: rgba(52, 199, 123, 0.14);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.30);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.36);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.45);
+}
+
+/* Números financeiros sempre tabulares — alinhamento perfeito em colunas */
+.num {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}

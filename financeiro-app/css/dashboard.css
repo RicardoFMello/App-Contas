@@ -1,0 +1,203 @@
+/* ============================================================
+   DASHBOARD
+   ============================================================ */
+
+.tela-dashboard {
+  padding-bottom: var(--space-8);
+}
+
+.dash-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+  flex-wrap: wrap;
+}
+
+.dash-eyebrow {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  text-transform: capitalize;
+  margin-bottom: var(--space-1);
+}
+
+.dash-titulo {
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-bold);
+  letter-spacing: -0.02em;
+}
+
+.dash-header-acoes {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/* ---------------- Alertas ---------------- */
+.dash-alertas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-bottom: var(--space-5);
+}
+
+.dash-alerta-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+}
+
+.dash-alerta-atrasado {
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+
+.dash-alerta-proximo {
+  background: var(--warning-bg);
+  color: var(--warning);
+}
+
+.dash-alerta-valor {
+  font-weight: var(--weight-semibold);
+  white-space: nowrap;
+}
+
+/* ---------------- Indicadores ---------------- */
+.dash-grid-indicadores {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.indicador-card {
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.indicador-label {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  font-weight: var(--weight-medium);
+}
+
+.indicador-valor {
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-bold);
+  letter-spacing: -0.01em;
+}
+
+.indicador-valor.positivo { color: var(--success); }
+.indicador-valor.negativo { color: var(--danger); }
+
+.indicador-rodape {
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.indicador-rodape.subida { color: var(--success); }
+.indicador-rodape.queda { color: var(--danger); }
+
+.indicador-barra {
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: var(--surface-alt);
+  overflow: hidden;
+  margin-top: var(--space-1);
+}
+
+.indicador-barra > span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  border-radius: var(--radius-full);
+  transition: width var(--transition-base);
+}
+
+.skeleton-card {
+  height: 118px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(90deg, var(--surface-alt) 25%, var(--border) 37%, var(--surface-alt) 63%);
+  background-size: 400% 100%;
+  animation: brilho 1.4s ease infinite;
+}
+
+@keyframes brilho {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0 50%; }
+}
+
+/* ---------------- Gráficos ---------------- */
+.dash-grid-graficos {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: var(--space-4);
+}
+
+.dash-card-grafico {
+  padding: var(--space-5);
+}
+
+.dash-card-titulo {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+}
+
+.dash-card-subtitulo {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-4);
+}
+
+.lista-parcelas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.parcela-item-nome {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  margin-bottom: var(--space-2);
+}
+
+.parcela-item-nome span:last-child {
+  color: var(--text-secondary);
+  font-weight: var(--weight-regular);
+}
+
+.dash-vazio {
+  color: var(--text-tertiary);
+  font-size: var(--text-sm);
+  text-align: center;
+  padding: var(--space-5) 0;
+}
+
+@media (max-width: 860px) {
+  .dash-grid-graficos {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .tela-dashboard {
+    padding: var(--space-4) var(--space-4) var(--space-7);
+  }
+  .dash-titulo {
+    font-size: var(--text-2xl);
+  }
+}

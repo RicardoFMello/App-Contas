@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Finanças</title>
+  <meta name="theme-color" content="#2F6FED" />
+  <link rel="manifest" href="manifest.json" />
+
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/login.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <link rel="stylesheet" href="css/app-shell.css" />
+  <link rel="stylesheet" href="css/contas.css" />
+</head>
+<body>
+
+  <!-- ============================================================
+       TELA DE LOGIN
+       Visível até haver sessão autenticada. app.js decide o que mostrar.
+       ============================================================ -->
+  <main id="tela-login" class="tela-login">
+
+    <button id="botao-tema" class="toggle-tema toggle-tema-flutuante" type="button" aria-label="Alternar tema claro/escuro">
+      <svg id="icone-tema" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="4"></circle>
+        <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>
+      </svg>
+    </button>
+
+    <div>
+      <div class="login-marca">
+        <svg viewBox="0 0 40 40" fill="none">
+          <path d="M20 3 C10 3 3 10 3 20 C3 30 10 37 20 37 C30 37 37 30 37 20"
+                stroke="var(--accent)" stroke-width="3.4" stroke-linecap="round" fill="none"/>
+          <path d="M14 22 L18 27 L27 14" stroke="var(--accent)" stroke-width="3.2"
+                stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+        <span>Finanças</span>
+      </div>
+
+      <form id="form-login" class="card login-card" novalidate>
+        <h1 class="login-titulo">Entrar</h1>
+        <p class="login-subtitulo">Acesse sua conta para continuar</p>
+
+        <div id="alerta-login" class="alerta alerta-erro oculto" role="alert"></div>
+
+        <div class="campo" id="campo-email">
+          <label for="input-email">E-mail</label>
+          <input id="input-email" name="email" type="email" placeholder="voce@email.com"
+                 autocomplete="email" required />
+          <span class="campo-erro-msg"></span>
+        </div>
+
+        <div class="campo" id="campo-senha">
+          <label for="input-senha">Senha</label>
+          <input id="input-senha" name="senha" type="password" placeholder="••••••••"
+                 autocomplete="current-password" required minlength="6" />
+          <span class="campo-erro-msg"></span>
+        </div>
+
+        <button id="botao-entrar" class="btn btn-primario" type="submit">
+          <span id="botao-entrar-texto">Entrar</span>
+        </button>
+
+        <p class="login-rodape">Acesso restrito — conta criada previamente pelo administrador</p>
+      </form>
+    </div>
+  </main>
+
+  <!-- ============================================================
+       APP AUTENTICADO
+       ============================================================ -->
+  <main id="tela-app" class="oculto tela-dashboard">
+
+    <header class="app-topbar">
+      <div class="login-marca app-marca">
+        <svg viewBox="0 0 40 40" fill="none">
+          <path d="M20 3 C10 3 3 10 3 20 C3 30 10 37 20 37 C30 37 37 30 37 20"
+                stroke="var(--accent)" stroke-width="3.4" stroke-linecap="round" fill="none"/>
+          <path d="M14 22 L18 27 L27 14" stroke="var(--accent)" stroke-width="3.2"
+                stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+        <span>Finanças</span>
+      </div>
+
+      <nav class="app-nav" aria-label="Navegação principal">
+        <button class="nav-btn" data-nav="dashboard" type="button">Dashboard</button>
+        <button class="nav-btn" data-nav="contas" type="button">Contas</button>
+      </nav>
+
+      <div class="app-topbar-acoes">
+        <button id="botao-tema-dash" class="toggle-tema" type="button" aria-label="Alternar tema claro/escuro">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>
+          </svg>
+        </button>
+        <button id="botao-sair" class="btn btn-texto" type="button">Sair</button>
+      </div>
+    </header>
+
+    <!-- ============================================================
+         VISTA: Dashboard
+         ============================================================ -->
+    <section id="vista-dashboard" class="app-vista">
+      <div class="dash-header">
+        <div>
+          <p class="dash-eyebrow" id="dash-mes-referencia">—</p>
+          <h1 class="dash-titulo">Visão geral</h1>
+        </div>
+      </div>
+
+      <!-- Alertas: contas atrasadas e próximas do vencimento -->
+      <section id="dash-alertas" class="dash-alertas oculto" aria-live="polite"></section>
+
+      <!-- Indicadores principais -->
+      <section class="dash-grid-indicadores" id="dash-indicadores" aria-label="Indicadores financeiros">
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+      </section>
+
+      <!-- Gráficos -->
+      <section class="dash-grid-graficos">
+        <div class="card dash-card-grafico">
+          <h2 class="dash-card-titulo">Evolução financeira</h2>
+          <p class="dash-card-subtitulo">Receitas x despesas — últimos 6 meses</p>
+          <canvas id="grafico-evolucao" height="220"></canvas>
+        </div>
+        <div class="card dash-card-grafico">
+          <h2 class="dash-card-titulo">Parcelas em andamento</h2>
+          <p class="dash-card-subtitulo">Progresso de cada conta parcelada</p>
+          <div id="lista-parcelas" class="lista-parcelas"></div>
+        </div>
+      </section>
+    </section>
+
+    <!-- ============================================================
+         VISTA: Contas
+         ============================================================ -->
+    <section id="vista-contas" class="app-vista oculto">
+      <div class="contas-header">
+        <h1 class="dash-titulo">Contas</h1>
+
+        <div class="contas-header-acoes">
+          <div class="seletor-mes">
+            <button id="mes-anterior" class="btn-icone" type="button" aria-label="Mês anterior">‹</button>
+            <span id="contas-mes-referencia" class="num">—</span>
+            <button id="mes-seguinte" class="btn-icone" type="button" aria-label="Próximo mês">›</button>
+          </div>
+          <button id="botao-nova-conta" class="btn btn-primario btn-nova-conta" type="button">+ Nova conta</button>
+        </div>
+      </div>
+
+      <div id="contas-lista" class="contas-lista">
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================================
+       MODAL: Nova conta / editar conta
+       ============================================================ -->
+  <dialog id="modal-conta" class="modal">
+    <form id="form-conta" method="dialog" class="modal-conteudo">
+      <h2 class="modal-titulo" id="modal-conta-titulo">Nova conta</h2>
+
+      <div class="campo">
+        <label for="conta-nome">Nome</label>
+        <input id="conta-nome" required placeholder="Ex: Internet, Cartão Nubank" />
+      </div>
+
+      <div class="campo">
+        <label for="conta-categoria">Categoria (opcional)</label>
+        <select id="conta-categoria">
+          <option value="">Sem categoria</option>
+        </select>
+      </div>
+
+      <div class="campo">
+        <label for="conta-tipo">Tipo</label>
+        <select id="conta-tipo">
+          <option value="mensal">Mensal recorrente</option>
+          <option value="parcelada">Parcelada</option>
+          <option value="unica">Única</option>
+        </select>
+      </div>
+
+      <div class="campo oculto" id="campo-total-parcelas">
+        <label for="conta-total-parcelas">Total de parcelas</label>
+        <input id="conta-total-parcelas" type="number" min="1" placeholder="Ex: 12" />
+      </div>
+
+      <div class="modal-grid-2">
+        <div class="campo">
+          <label for="conta-valor-padrao">Valor padrão (opcional)</label>
+          <input id="conta-valor-padrao" type="number" step="0.01" min="0" placeholder="0,00" />
+        </div>
+        <div class="campo">
+          <label for="conta-dia-vencimento">Dia de vencimento</label>
+          <input id="conta-dia-vencimento" type="number" min="1" max="31" placeholder="Ex: 15" />
+        </div>
+      </div>
+
+      <div id="modal-conta-erro" class="alerta alerta-erro oculto" role="alert"></div>
+
+      <div class="modal-acoes">
+        <button type="button" class="btn btn-texto" data-fechar-modal>Cancelar</button>
+        <button type="submit" class="btn btn-primario" id="botao-salvar-conta">Salvar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- ============================================================
+       MODAL: Lançar / editar mês de uma conta
+       ============================================================ -->
+  <dialog id="modal-lancamento" class="modal">
+    <form id="form-lancamento" method="dialog" class="modal-conteudo">
+      <h2 class="modal-titulo" id="modal-lancamento-titulo">Lançar mês</h2>
+
+      <div class="modal-grid-2">
+        <div class="campo">
+          <label for="lancamento-valor">Valor</label>
+          <input id="lancamento-valor" type="number" step="0.01" min="0" required />
+        </div>
+        <div class="campo">
+          <label for="lancamento-vencimento">Vencimento</label>
+          <input id="lancamento-vencimento" type="date" />
+        </div>
+      </div>
+
+      <div class="campo">
+        <label for="lancamento-observacao">Observação (opcional)</label>
+        <input id="lancamento-observacao" placeholder="Ex: pago com desconto" />
+      </div>
+
+      <div id="modal-lancamento-erro" class="alerta alerta-erro oculto" role="alert"></div>
+
+      <div class="modal-acoes">
+        <button type="button" class="btn btn-texto" data-fechar-modal>Cancelar</button>
+        <button type="submit" class="btn btn-primario" id="botao-salvar-lancamento">Salvar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

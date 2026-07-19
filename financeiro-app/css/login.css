@@ -1,0 +1,109 @@
+/* ============================================================
+   TELA DE LOGIN
+   ============================================================ */
+
+.tela-login {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-5);
+  position: relative;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+/* Manchas ambiente suaves — único elemento "assinatura" da tela,
+   remete a crescimento/fluxo financeiro sem usar ícones clichês */
+.tela-login::before,
+.tela-login::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  pointer-events: none;
+  animation: flutuar 16s ease-in-out infinite;
+}
+
+.tela-login::before {
+  width: 420px;
+  height: 420px;
+  background: var(--glow-a);
+  top: -140px;
+  left: -120px;
+}
+
+.tela-login::after {
+  width: 360px;
+  height: 360px;
+  background: var(--glow-b);
+  bottom: -160px;
+  right: -100px;
+  animation-delay: -8s;
+}
+
+@keyframes flutuar {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(24px, -18px) scale(1.06); }
+}
+
+.login-marca {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+  justify-content: center;
+}
+
+.login-marca svg {
+  width: 34px;
+  height: 34px;
+}
+
+.login-marca span {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+.login-card {
+  position: relative;
+  width: 100%;
+  max-width: 380px;
+  padding: var(--space-6) var(--space-5);
+}
+
+.login-titulo {
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-bold);
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-1);
+}
+
+.login-subtitulo {
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  margin-bottom: var(--space-6);
+}
+
+.login-rodape {
+  text-align: center;
+  margin-top: var(--space-5);
+  font-size: var(--text-sm);
+  color: var(--text-tertiary);
+}
+
+.toggle-tema-flutuante {
+  position: absolute;
+  top: var(--space-5);
+  right: var(--space-5);
+  z-index: 2;
+}
+
+@media (max-width: 380px) {
+  .login-card {
+    padding: var(--space-5) var(--space-4);
+  }
+}
