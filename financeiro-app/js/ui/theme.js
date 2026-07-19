@@ -44,6 +44,7 @@ export function definirTema(tema) {
   aplicarTema(tema);
   localStorage.setItem(CHAVE_TEMA, tema);
   atualizarSeletorNaTelaConfiguracoes(tema);
+  document.dispatchEvent(new CustomEvent('tema:alterado', { detail: { tema } }));
   if (sincronizarComNuvem) {
     atualizarTema(tema); // fire-and-forget; falha de rede não deve travar a UI
   }

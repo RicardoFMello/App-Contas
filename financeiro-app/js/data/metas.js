@@ -52,9 +52,9 @@ export function progressoDaMeta(meta) {
 
   let diasRestantes = null;
   if (meta.prazo) {
-    const hoje = new Date();
-    const alvo = new Date(meta.prazo);
-    diasRestantes = Math.ceil((alvo - hoje) / (1000 * 60 * 60 * 24));
+    const hoje = new Date().setHours(0, 0, 0, 0);
+    const alvo = new Date(meta.prazo + 'T00:00:00').setHours(0, 0, 0, 0);
+    diasRestantes = Math.round((alvo - hoje) / (1000 * 60 * 60 * 24));
   }
 
   return { percentual, diasRestantes };

@@ -49,7 +49,7 @@ financeiro-app/
 - [x] Fase 8 — Módulo Metas
 - [x] Fase 9 — Tema e Configurações
 - [x] Fase 10 — PWA
-- [ ] Fase 11 — QA
+- [x] Fase 11 — QA
 - [ ] Fase 12 — Importação da planilha
 - [ ] Fase 13 — Deploy (GitHub → Cloudflare Pages)
 - [ ] Fase 14 — Documentação final
@@ -169,3 +169,20 @@ Arquivos: `manifest.json`, `service-worker.js`, `assets/icons/*.png`, metatags e
 
 - **Android (Chrome):** abra o app pela URL → menu (⋮) → "Adicionar à tela inicial" ou "Instalar app".
 - **iPhone (Safari):** abra o app → botão de compartilhar (□↑) → "Adicionar à Tela de Início". *(Só funciona no Safari, não no Chrome do iOS — limitação da Apple, não do app.)*
+
+## Fase 11 — QA (revisão completa)
+
+Revisei todo o código em busca de bugs, cálculos incorretos, duplicação, falhas de segurança e responsividade. Encontrei e corrigi:
+
+1. **Código duplicado:** o Dashboard tinha sua própria função de somar valores por status, repetindo lógica que já existia em `lancamentos.js`. Extraí para `agregarPorStatus()` — uma única fonte de verdade, usada nos dois lugares.
+2. **Falha de segurança (XSS):** os nomes de contas nos alertas e na lista de parcelas do Dashboard eram inseridos na tela sem sanitização — um nome de conta malicioso poderia executar código no navegador. Corrigido com a mesma função `escapar()` já usada nas outras telas.
+3. **Numeração de parcela frágil:** ao lançar uma nova parcela, o número sugerido contava quantos lançamentos existiam, em vez de olhar o maior número já usado. Se você excluísse uma parcela no meio do caminho, o próximo número podia repetir. Corrigido.
+4. **Dias restantes da meta impreciso:** o cálculo comparava hora exata em vez de dia calendário, podendo mostrar 1 dia a mais ou a menos dependendo da hora em que você abria o app. Corrigido normalizando para meia-noite.
+5. **Gráfico de evolução não atualizava as cores ao trocar de tema** (limitação que eu tinha documentado na Fase 4) — corrigido: agora o gráfico escuta a troca de tema e se redesenha sozinho, sem precisar recarregar a página.
+6. **Integridade do banco:** o formulário já impedia valores inválidos (parcelas negativas, dia de vencimento fora de 1–31, investimentos negativos), mas o banco em si aceitaria se algum dado chegasse por outro caminho. Criei `sql/patch-fase11-qa.sql` com as constraints que faltavam — **rode esse arquivo no SQL Editor do Supabase uma vez** (mesmo processo do `schema.sql`).
+
+**Esclarecimento sobre dois indicadores do Dashboard que parecem parecidos:**
+- **Saldo disponível** = receitas − despesas **já pagas**. É "quanto eu tenho na mão agora".
+- **Fluxo de caixa** = receitas − despesas **totais do mês** (pagas + pendentes + atrasadas). É "quanto vai sobrar depois que tudo for pago". Pode ser diferente do saldo disponível — isso é esperado, não é bug.
+
+**Responsividade:** conferida em breakpoints de 1180px (desktop), 860px (tablet), 720px, 560px e 380px (celular pequeno) — nenhum texto sobrepõe, nenhum botão some, grids viram coluna única nas telas estreitas.
