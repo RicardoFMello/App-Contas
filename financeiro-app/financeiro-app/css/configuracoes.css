@@ -1,0 +1,74 @@
+/* ============================================================
+   VISTA: Configurações
+   ============================================================ */
+
+.config-titulo {
+  margin-bottom: var(--space-5);
+}
+
+.config-card {
+  padding: var(--space-5);
+  margin-bottom: var(--space-4);
+  max-width: 480px;
+}
+
+.config-secao-titulo {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+  margin-bottom: var(--space-1);
+}
+
+.config-secao-descricao {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-4);
+}
+
+.config-tema-opcoes {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.config-tema-botao {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  border: 2px solid var(--border);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--text-secondary);
+  transition: border-color var(--transition-fast);
+}
+
+.config-tema-botao.ativo {
+  border-color: var(--accent);
+  color: var(--text-primary);
+}
+
+.config-tema-preview {
+  width: 100%;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+
+.config-tema-preview-claro {
+  background: linear-gradient(135deg, #F6F7FA 50%, #FFFFFF 50%);
+}
+
+.config-tema-preview-escuro {
+  background: linear-gradient(135deg, #0B0D10 50%, #16181D 50%);
+}
+
+.config-email {
+  font-weight: var(--weight-medium);
+  margin-bottom: var(--space-4);
+}
+
+.config-botao-sair {
+  color: var(--danger);
+}

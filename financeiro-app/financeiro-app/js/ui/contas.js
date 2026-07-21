@@ -290,7 +290,8 @@ async function salvarLancamento(evento) {
     let numero_parcela = null;
     if (contaParaLancamento.tipo_recorrencia === 'parcelada') {
       const { dados: historico } = await listarPorConta(contaParaLancamento.id);
-      numero_parcela = (historico?.length || 0) + 1;
+      const maiorNumero = (historico || []).reduce((max, l) => Math.max(max, l.numero_parcela || 0), 0);
+      numero_parcela = maiorNumero + 1;
     }
     resultado = await criarLancamento({
       conta_id: contaParaLancamento.id,

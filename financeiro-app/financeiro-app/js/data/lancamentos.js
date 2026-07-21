@@ -105,6 +105,15 @@ export function removerLancamento(id) {
   );
 }
 
+/** Agrega uma lista de lançamentos já carregada, somando valores por status. Função pura — não busca dados. */
+export function agregarPorStatus(lancamentos) {
+  const totais = { pago: 0, pendente: 0, atrasado: 0 };
+  for (const lancamento of lancamentos) {
+    totais[lancamento.status] += Number(lancamento.valor);
+  }
+  return totais;
+}
+
 /**
  * Soma valores de um mês agrupados por status real (pago/pendente/atrasado).
  * Base numérica para os indicadores do dashboard (Fase 4).
@@ -112,10 +121,5 @@ export function removerLancamento(id) {
 export async function totaisPorStatus(mesReferencia) {
   const { dados, erro } = await listarPorMes(mesReferencia);
   if (erro) return { dados: null, erro };
-
-  const totais = { pago: 0, pendente: 0, atrasado: 0 };
-  for (const lancamento of dados) {
-    totais[lancamento.status] += Number(lancamento.valor);
-  }
-  return { dados: totais, erro: null };
+  return { dados: agregarPorStatus(dados), erro: null };
 }

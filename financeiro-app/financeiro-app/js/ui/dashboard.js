@@ -4,7 +4,7 @@
 // Nenhum cálculo financeiro é duplicado aqui — reaproveita os
 // totais já calculados e validados em js/data/*.
 // ============================================================
-import { listarPorMes as lancamentosDoMes, listarPendentesEAtrasados, listarPorConta } from '../data/lancamentos.js';
+import { listarPorMes as lancamentosDoMes, listarPendentesEAtrasados, listarPorConta, agregarPorStatus } from '../data/lancamentos.js';
 import { totalPorMes as receitasDoMes } from '../data/receitas.js';
 import { resumoPatrimonio } from '../data/investimentos.js';
 import { listarMetas, progressoDaMeta } from '../data/metas.js';
@@ -13,10 +13,20 @@ import { listarContas } from '../data/contas.js';
 const formatoMoeda = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
 const formatoMes = new Intl.DateTimeFormat('pt-BR', { month: 'long', year: 'numeric' });
 let graficoEvolucao = null;
+let referenciaAtualDashboard = null;
+let listenerTemaRegistrado = false;
 
 export async function inicializarDashboard() {
   const hoje = new Date();
+  referenciaAtualDashboard = hoje;
   document.getElementById('dash-mes-referencia').textContent = capitalizar(formatoMes.format(hoje));
+
+  if (!listenerTemaRegistrado) {
+    listenerTemaRegistrado = true;
+    document.addEventListener('tema:alterado', () => {
+      if (referenciaAtualDashboard) renderizarGraficoEvolucao(referenciaAtualDashboard);
+    });
+  }
 
   // Todas as buscas em paralelo — nenhuma trava a outra.
   const [
@@ -70,7 +80,7 @@ function itemAlerta(lancamento, tipo, texto) {
   const classe = tipo === 'atrasado' ? 'dash-alerta-atrasado' : 'dash-alerta-proximo';
   return `
     <div class="dash-alerta-item ${classe}">
-      <span>${texto}</span>
+      <span>${escapar(texto)}</span>
       <span class="dash-alerta-valor num">${formatoMoeda.format(lancamento.valor)}</span>
     </div>`;
 }
@@ -85,8 +95,9 @@ function diasAteVencimento(vencimento) {
 // ---------------- Indicadores ----------------
 
 function renderizarIndicadores({ lancamentosMes, totalReceitas, patrimonio, metas }) {
-  const despesasPagas = somaPorStatus(lancamentosMes, 'pago');
-  const despesasPendentes = somaPorStatus(lancamentosMes, 'pendente') + somaPorStatus(lancamentosMes, 'atrasado');
+  const totaisStatus = agregarPorStatus(lancamentosMes);
+  const despesasPagas = totaisStatus.pago;
+  const despesasPendentes = totaisStatus.pendente + totaisStatus.atrasado;
   const despesasTotal = despesasPagas + despesasPendentes;
 
   const saldoDisponivel = totalReceitas - despesasPagas;
@@ -162,10 +173,6 @@ function renderizarErroIndicadores() {
     `<p class="dash-vazio">Não foi possível carregar os indicadores. Recarregue a página.</p>`;
 }
 
-function somaPorStatus(lancamentos, status) {
-  return lancamentos.filter((l) => l.status === status).reduce((soma, l) => soma + Number(l.valor), 0);
-}
-
 // ---------------- Parcelas em andamento ----------------
 
 async function renderizarParcelas(contas) {
@@ -186,7 +193,7 @@ async function renderizarParcelas(contas) {
       return `
         <div>
           <div class="parcela-item-nome">
-            <span>${conta.nome}</span>
+            <span>${escapar(conta.nome)}</span>
             <span>${pagas}/${total}</span>
           </div>
           <div class="indicador-barra"><span style="width:${percentual}%"></span></div>
@@ -252,4 +259,10 @@ function ultimosNMeses(referencia, quantidade) {
 
 function capitalizar(texto) {
   return texto.charAt(0).toUpperCase() + texto.slice(1);
+}
+
+function escapar(texto) {
+  const div = document.createElement('div');
+  div.textContent = texto;
+  return div.innerHTML;
 }

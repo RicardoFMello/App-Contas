@@ -1,0 +1,13 @@
+# Regras de cache do navegador para os arquivos estáticos.
+# A Cloudflare já revalida por padrão (ETag), então isto é só um reforço:
+# ícones raramente mudam (cache longo) e o service worker NUNCA pode
+# ficar em cache do navegador, ou atualizações do app param de chegar.
+
+/service-worker.js
+  Cache-Control: no-cache
+
+/manifest.json
+  Cache-Control: no-cache
+
+/assets/icons/*
+  Cache-Control: public, max-age=604800, immutable
