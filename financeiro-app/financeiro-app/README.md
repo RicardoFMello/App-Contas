@@ -2,6 +2,64 @@
 
 Aplicativo financeiro pessoal (PWA), Vanilla JS + Supabase + Cloudflare Pages.
 
+> 📌 As seções detalhadas de cada fase ficam mais abaixo, em **"Histórico de desenvolvimento"**. Isto aqui é o resumo direto ao ponto — comece por aqui se estiver configurando o app do zero ou revisando depois de um tempo.
+
+## Guia de referência completo
+
+### 1. Configuração do Supabase
+1. Crie um projeto em [supabase.com](https://supabase.com)
+2. **SQL Editor** → cole e rode, **nesta ordem**:
+   1. `sql/schema.sql` (cria as 7 tabelas + RLS)
+   2. `sql/patch-fase11-qa.sql` (reforça validações)
+   3. `sql/import-fase12-dados.sql` (só na primeira vez — traz os dados reais da planilha)
+3. **Project Settings → API Keys** → copie a **Project URL** e a **Publishable key** (`sb_publishable_...`) para `js/config/supabase.js`
+
+### 2. Criação das tabelas
+Já cobertas pelo `schema.sql`: `categorias`, `contas`, `lancamentos`, `receitas`, `investimentos`, `metas`, `configuracoes`. Detalhes do modelo de dados na Fase 1 abaixo.
+
+### 3. Autenticação
+- **Authentication → Providers**: deixe só Email/Password ativo
+- **Authentication → Users → Add user → Create new user**: crie seu e-mail/senha, marque **Auto Confirm User**
+- Não existe cadastro público — cada novo usuário (esposa, mãe, irmão) é criado manualmente aqui, do mesmo jeito. RLS isola os dados de cada um automaticamente, sem configuração extra
+
+### 4. Importação dos dados
+Já feita (Fase 12). Se precisar reimportar do zero num projeto Supabase novo, rode `sql/import-fase12-dados.sql` depois do schema e do patch — ele busca automaticamente o primeiro usuário cadastrado.
+
+### 5. Configuração do GitHub
+Repositório: `App-Contas`, com a pasta `financeiro-app/` na raiz. Para atualizar depois de qualquer mudança: extrair o zip mais recente → `Add file → Upload files` → arrastar a pasta `financeiro-app` inteira → **Commit changes**.
+
+### 6. Publicação pela Cloudflare
+- **Workers & Pages → Create application → Connect to Git** → selecione o repositório
+- Build command: vazio · Deploy command: `npx wrangler deploy`
+- O arquivo `wrangler.jsonc` (raiz do repositório) já configura tudo — não precisa mexer
+- Todo `Commit` no GitHub dispara um novo deploy sozinho
+- URL atual: `https://app-contas-01.ricardomarquesmello.workers.dev`
+
+### 7. Instalação como PWA
+- **Android (Chrome):** abrir o app → menu (⋮) → "Instalar app"
+- **iPhone (Safari):** abrir o app → compartilhar (□↑) → "Adicionar à Tela de Início" *(só funciona no Safari)*
+
+### 8. Backup
+O Supabase já faz backup automático diário no plano gratuito (retenção limitada). Para um backup manual seu, a qualquer momento:
+- **Database → Backups** no painel Supabase → baixar backup mais recente, ou
+- **SQL Editor**, rode e exporte o resultado como CSV pelo botão de download:
+  ```sql
+  select * from contas;
+  select * from lancamentos;
+  select * from receitas;
+  select * from investimentos;
+  select * from metas;
+  ```
+
+### 9. Restauração
+- Backup automático da Cloudflare/GitHub: seu código nunca se perde (histórico completo de commits no GitHub, histórico de deploys na Cloudflare com rollback de 1 clique)
+- Backup dos dados: **Database → Backups → Restore** no painel Supabase restaura o banco inteiro para o ponto escolhido
+
+### 10. Futuras atualizações
+Para adicionar uma funcionalidade nova: descreva o que quer, eu gero os arquivos, você sobe no GitHub do mesmo jeito de sempre (`Upload files` → `Commit`). Se mudar CSS/JS e a mudança não aparecer no celular, suba o número em `CACHE_NAME` no topo do `service-worker.js`.
+
+---
+
 ## Estrutura de pastas
 
 ```
@@ -9,32 +67,52 @@ financeiro-app/
 ├── index.html              → tela principal (shell da aplicação)
 ├── manifest.json           → configuração PWA
 ├── service-worker.js       → cache offline / instalação
+├── _headers                → regras de cache HTTP (Cloudflare)
 ├── css/
 │   ├── variables.css       → cores, espaçamentos, tipografia (temas claro/escuro)
 │   ├── base.css            → reset e estilos globais
 │   ├── components.css      → botões, cards, inputs, modais
-│   └── dashboard.css        → estilos específicos do dashboard
+│   ├── login.css           → tela de login
+│   ├── app-shell.css       → topbar e navegação entre vistas
+│   ├── dashboard.css       → indicadores, alertas, gráficos
+│   ├── contas.css          → vista Contas
+│   ├── receitas.css        → vista Receitas
+│   ├── investimentos.css   → vista Investimentos
+│   ├── metas.css           → vista Metas
+│   └── configuracoes.css   → vista Configurações
 ├── js/
 │   ├── config/
 │   │   └── supabase.js     → inicialização do cliente Supabase
 │   ├── auth/
 │   │   └── auth.js         → login, logout, sessão
-│   ├── data/
-│   │   ├── contas.js       → CRUD de contas
-│   │   ├── lancamentos.js  → CRUD de lançamentos/parcelas
-│   │   ├── receitas.js     → CRUD de receitas
+│   ├── data/                → CRUD puro, sem UI — sempre retorna { dados, erro }
+│   │   ├── util.js
+│   │   ├── categorias.js
+│   │   ├── contas.js
+│   │   ├── lancamentos.js
+│   │   ├── receitas.js
 │   │   ├── investimentos.js
-│   │   └── metas.js
-│   ├── ui/
-│   │   ├── dashboard.js    → renderização dos indicadores/gráficos
-│   │   ├── router.js       → navegação entre telas (SPA simples)
-│   │   └── theme.js        → alternância claro/escuro
-│   └── app.js               → ponto de entrada, inicializa tudo
+│   │   ├── metas.js
+│   │   └── configuracoes.js
+│   ├── ui/                  → renderização de cada vista
+│   │   ├── router.js
+│   │   ├── theme.js
+│   │   ├── dashboard.js
+│   │   ├── contas.js
+│   │   ├── receitas.js
+│   │   ├── investimentos.js
+│   │   ├── metas.js
+│   │   └── configuracoes.js
+│   └── app.js               → ponto de entrada, registra vistas e sessão
 ├── assets/
-│   └── icons/               → ícones do PWA (vários tamanhos)
+│   └── icons/               → ícones do PWA (192/512, normal/maskable)
 ├── sql/
-│   └── schema.sql            → schema completo do Supabase (Fase 1)
+│   ├── schema.sql                  → schema completo (Fase 1)
+│   ├── patch-fase11-qa.sql         → reforços de integridade (Fase 11)
+│   └── import-fase12-dados.sql     → dados reais da planilha (Fase 12)
 └── README.md
+
+(na raiz do repositório GitHub, fora desta pasta: wrangler.jsonc — configuração do deploy Cloudflare)
 ```
 
 ## Status do desenvolvimento
@@ -52,18 +130,13 @@ financeiro-app/
 - [x] Fase 11 — QA
 - [x] Fase 12 — Importação da planilha
 - [x] Fase 13 — Deploy (GitHub → Cloudflare Pages)
-- [ ] Fase 14 — Documentação final
+- [x] Fase 14 — Documentação final
 
-## Rodando o schema no Supabase
+## Histórico de desenvolvimento (fase a fase)
 
-1. Criar projeto em supabase.com
-2. Abrir SQL Editor
-3. Colar o conteúdo de `sql/schema.sql`
-4. Executar (RUN)
+Registro detalhado de cada etapa, decisões tomadas e por quê — útil se um dia eu (ou outra pessoa) precisar entender o "porquê" de alguma escolha do código.
 
-Detalhes completos de configuração virão na Fase 1 (documentação) e Fase 13 (deploy).
-
-## Fase 2 — Autenticação (configuração)
+### Fase 2 — Autenticação (configuração)
 
 1. No Supabase: **Authentication → Providers** → deixar apenas Email/Password ativo.
 2. Em **Authentication → Users** → criar o primeiro usuário manualmente (seu e-mail e senha). Não haverá tela de cadastro público — acesso restrito por design.
@@ -74,7 +147,7 @@ Detalhes completos de configuração virão na Fase 1 (documentação) e Fase 13
 
 Cada novo usuário (esposa, mãe, irmão) é criado do mesmo jeito no passo 2 — a trigger do schema já cria a linha em `configuracoes` automaticamente, e o RLS isola os dados sem nenhuma configuração extra.
 
-## Fase 3 — Camada de dados
+### Fase 3 — Camada de dados
 
 Módulos em `js/data/`: `categorias.js`, `contas.js`, `lancamentos.js`, `receitas.js`, `investimentos.js`, `metas.js`, mais `util.js` (compartilhado).
 
@@ -96,7 +169,7 @@ Pontos de confiabilidade implementados:
 - `contas.js`: exclusão é **soft delete** (`ativa = false`) por padrão — preserva o histórico de lançamentos já pagos. Exclusão definitiva só é permitida para contas sem lançamentos.
 - `investimentos.js` e `metas.js`: cálculos de rendimento e progresso centralizados em uma função só, para evitar fórmulas divergentes em telas diferentes.
 
-## Fase 4 — Dashboard
+### Fase 4 — Dashboard
 
 Arquivos: `js/ui/dashboard.js`, `css/dashboard.css`, seção `#tela-app` em `index.html`.
 
@@ -108,7 +181,7 @@ Indicadores exibidos: saldo disponível, receitas do mês, despesas do mês (com
 
 **Limitação conhecida (revisar na Fase 11 — QA):** o gráfico de evolução usa as cores do tema no momento em que é desenhado; ao alternar claro/escuro com o dashboard já carregado, as cores do gráfico só atualizam se a página for recarregada.
 
-## Fase 5 — Módulo Contas
+### Fase 5 — Módulo Contas
 
 Arquivos: `js/ui/contas.js`, `js/ui/router.js`, `css/contas.css`, `css/app-shell.css`, vistas e modais em `index.html`.
 
@@ -120,7 +193,7 @@ Arquivos: `js/ui/contas.js`, `js/ui/router.js`, `css/contas.css`, `css/app-shell
 - "Arquivar" faz soft delete (pede confirmação) — preserva o histórico.
 - Chamado `js/data/categorias.js` (Fase 3) para popular o seletor — ainda não existe uma tela dedicada para criar categorias; por enquanto elas ficam "Sem categoria" até você decidir se quer esse módulo (posso incluir como extra numa fase futura).
 
-## Fase 6 — Módulo Receitas
+### Fase 6 — Módulo Receitas
 
 Arquivos: `js/ui/receitas.js`, `css/receitas.css`, vista e modal em `index.html`.
 
@@ -130,7 +203,7 @@ Arquivos: `js/ui/receitas.js`, `css/receitas.css`, vista e modal em `index.html`
 - Editar e remover diretamente na lista.
 - O indicador "Receitas do mês" do Dashboard já usa esses dados automaticamente — nada a ligar manualmente.
 
-## Fase 7 — Módulo Investimentos
+### Fase 7 — Módulo Investimentos
 
 Arquivos: `js/ui/investimentos.js`, `css/investimentos.css`, vista e modal em `index.html`.
 
@@ -139,7 +212,7 @@ Arquivos: `js/ui/investimentos.js`, `css/investimentos.css`, vista e modal em `i
 - "Atualizar" reabre o modal para você lançar o valor atual mais recente (evolução patrimonial manual — sem integração automática de cotação, conforme escopo original).
 - O card "Patrimônio investido" do Dashboard já reflete esses dados automaticamente.
 
-## Fase 8 — Módulo Metas
+### Fase 8 — Módulo Metas
 
 Arquivos: `js/ui/metas.js`, `css/metas.css`, vistas e modais em `index.html`.
 
@@ -148,7 +221,7 @@ Arquivos: `js/ui/metas.js`, `css/metas.css`, vistas e modais em `index.html`.
 - Botão "Aportar" soma um valor ao progresso sem precisar editar a meta inteira.
 - **Importante:** crie uma meta chamada "Reserva de emergência" (ou qualquer nome contendo "reserva") — é assim que o card do Dashboard identifica automaticamente qual meta é a reserva. Você mencionou que ela cobre 6 meses de despesas: calcule esse valor (6x sua despesa mensal média) e use como "Valor da meta".
 
-## Fase 9 — Tema e Configurações
+### Fase 9 — Tema e Configurações
 
 Arquivos: `js/ui/configuracoes.js`, `js/data/configuracoes.js`, `css/configuracoes.css`, vista em `index.html`. `js/ui/theme.js` reescrito.
 
@@ -156,7 +229,7 @@ Arquivos: `js/ui/configuracoes.js`, `js/data/configuracoes.js`, `css/configuraco
 - **Tema agora é salvo na nuvem** (tabela `configuracoes`, criada automaticamente por usuário na Fase 1) além do `localStorage`. Fluxo: abre o app → aplica o tema salvo localmente (instantâneo, sem flash) → busca o tema da nuvem em paralelo e ajusta se for diferente (ex: você mudou o tema em outro aparelho). Isso já deixa a arquitetura pronta para quando sua esposa/mãe/irmão tiverem contas próprias, cada um com o tema salvo separadamente.
 - Alternar o tema em qualquer lugar do app (topbar ou tela de Configurações) atualiza os dois lugares ao mesmo tempo.
 
-## Fase 10 — PWA
+### Fase 10 — PWA
 
 Arquivos: `manifest.json`, `service-worker.js`, `assets/icons/*.png`, metatags em `index.html`, registro em `js/app.js`.
 
@@ -165,12 +238,12 @@ Arquivos: `manifest.json`, `service-worker.js`, `assets/icons/*.png`, metatags e
 - Estratégia "stale-while-revalidate": abre instantâneo (do cache) e atualiza sozinho em segundo plano quando há internet.
 - **Se você mudar algum arquivo CSS/JS no futuro e a mudança não aparecer no celular:** suba o número em `CACHE_NAME` no topo do `service-worker.js` (ex: `v1` → `v2`) — isso força todo mundo a buscar a versão nova.
 
-### Como instalar no celular
+#### Como instalar no celular
 
 - **Android (Chrome):** abra o app pela URL → menu (⋮) → "Adicionar à tela inicial" ou "Instalar app".
 - **iPhone (Safari):** abra o app → botão de compartilhar (□↑) → "Adicionar à Tela de Início". *(Só funciona no Safari, não no Chrome do iOS — limitação da Apple, não do app.)*
 
-## Fase 11 — QA (revisão completa)
+### Fase 11 — QA (revisão completa)
 
 Revisei todo o código em busca de bugs, cálculos incorretos, duplicação, falhas de segurança e responsividade. Encontrei e corrigi:
 
@@ -187,7 +260,7 @@ Revisei todo o código em busca de bugs, cálculos incorretos, duplicação, fal
 
 **Responsividade:** conferida em breakpoints de 1180px (desktop), 860px (tablet), 720px, 560px e 380px (celular pequeno) — nenhum texto sobrepõe, nenhum botão some, grids viram coluna única nas telas estreitas.
 
-## Fase 12 — Importação da planilha
+### Fase 12 — Importação da planilha
 
 Arquivo: `sql/import-fase12-dados.sql`. **Rode no SQL Editor do Supabase, uma única vez**, depois do `schema.sql` e do `patch-fase11-qa.sql`.
 
@@ -224,28 +297,28 @@ Arquivo: `sql/import-fase12-dados.sql`. **Rode no SQL Editor do Supabase, uma ú
 
 **A partir de agora a planilha não é mais consultada pelo app** — tudo vive no Supabase.
 
-## Fase 13 — Deploy (consolidação final)
+### Fase 13 — Deploy (consolidação final)
 
 O deploy contínuo já está funcionando desde a Fase 2 (todo `Commit` no GitHub redeploya sozinho na Cloudflare). Esta fase fecha as pontas soltas:
 
 **Arquivo novo:** `_headers` — regras de cache HTTP. O ícone do app pode ficar em cache por mais tempo (raramente muda); o `service-worker.js` e o `manifest.json` nunca podem ficar em cache do navegador, senão atualizações do app deixam de chegar aos seus dispositivos.
 
-### URL atual
+#### URL atual
 `https://app-contas-01.ricardomarquesmello.workers.dev` — funcionando, HTTPS válido.
 
-### Domínio próprio (opcional)
+#### Domínio próprio (opcional)
 Se você tiver ou comprar um domínio (ex: `financas.seusite.com.br`):
 1. Adicione o domínio à sua conta Cloudflare (**Domains** no menu lateral)
 2. No seu Worker → **Settings → Domains & Routes → Add → Custom Domain**
 3. Escolha o domínio/subdomínio — a Cloudflare emite o certificado HTTPS sozinha, sem custo extra
 
-### Renomear a URL `workers.dev` (sem precisar de domínio próprio)
+#### Renomear a URL `workers.dev` (sem precisar de domínio próprio)
 Worker → **Settings → Rename** — muda `app-contas-01` para o nome que quiser. Atualize o `start_url` no `manifest.json` se fizer isso (ele é relativo, então normalmente não precisa mexer).
 
-### Se um deploy quebrar alguma coisa
+#### Se um deploy quebrar alguma coisa
 Worker → aba **Deployments** → lista todo o histórico → botão **Rollback** no deploy anterior que funcionava. Reverte em segundos, sem precisar mexer no GitHub.
 
-### Checklist de produção (tudo já feito até aqui)
+#### Checklist de produção (tudo já feito até aqui)
 - [x] RLS ativo em todas as tabelas (Fase 1)
 - [x] Login restrito, sem cadastro público (Fase 2)
 - [x] Constraints de integridade aplicadas (`patch-fase11-qa.sql`)
